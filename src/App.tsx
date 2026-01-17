@@ -84,7 +84,7 @@ const TYPED_LINES = [
   "> so i made this for myself",
   "...",
   "(๑•ᴗ•๑) (๑•ᴗ•๑) (๑•ᴗ•๑)",
-  "...",
+  "",
   "> just for fun and to practice !!!",
 ];
 const TYPED_CHAR_DELAY = 100;
