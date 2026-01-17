@@ -556,39 +556,48 @@ export default function App() {
       {hasAnimationCompleted && isCandleLit && (
         <div className="hint-overlay">Tekan spasi untuk meniup lilin</div>
       )}
-      <Canvas
-        gl={{ alpha: true }}
-        style={{ background: "transparent" }}
-        onCreated={({ gl }) => {
-          gl.setClearColor("#000000", 0);
-        }}
-      >
-        <Suspense fallback={null}>
-          <AnimatedScene
-            isPlaying={isScenePlaying}
-            candleLit={isCandleLit}
-            onBackgroundFadeChange={setBackgroundOpacity}
-            onEnvironmentProgressChange={setEnvironmentProgress}
-            onAnimationComplete={() => setHasAnimationCompleted(true)}
-            cards={BIRTHDAY_CARDS}
-            activeCardId={activeCardId}
-            onToggleCard={handleCardToggle}
-          />
-          <ambientLight intensity={(1 - environmentProgress) * 0.8} />
-          <directionalLight intensity={0.5} position={[2, 10, 0]} color={[1, 0.9, 0.95]}/>
-          <Environment
-            files={["/shanghai_bund_4k.hdr"]}
-            backgroundRotation={[0, 3.3, 0]}
-            environmentRotation={[0, 3.3, 0]}
-            background
-            environmentIntensity={0.1 * environmentProgress}
-            backgroundIntensity={0.05 * environmentProgress}
-          />
-          <EnvironmentBackgroundController intensity={0.05 * environmentProgress} />
-          <Fireworks isActive={fireworksActive} origin={[0, 10, 0]} />
-          <ConfiguredOrbitControls />
-        </Suspense>
-      </Canvas>
+    <Canvas
+  dpr={[1, 1.5]}  // ← TAMBAH INI (limit pixel ratio)
+  performance={{ min: 0.5 }}  // ← TAMBAH INI (auto-adjust)
+  gl={{ 
+    alpha: true,
+    antialias: false,  // ← TAMBAH INI (matikan anti-aliasing)
+    powerPreference: "high-performance"  // ← TAMBAH INI
+  }}
+  style={{ background: "transparent" }}
+  onCreated={({ gl }) => {
+    gl.setClearColor("#000000", 0);
+  }}
+>
+  <Suspense fallback={null}>
+    <AnimatedScene
+      isPlaying={isScenePlaying}
+      candleLit={isCandleLit}
+      onBackgroundFadeChange={setBackgroundOpacity}
+      onEnvironmentProgressChange={setEnvironmentProgress}
+      onAnimationComplete={() => setHasAnimationCompleted(true)}
+      cards={BIRTHDAY_CARDS}
+      activeCardId={activeCardId}
+      onToggleCard={handleCardToggle}
+    />
+    <ambientLight intensity={(1 - environmentProgress) * 0.8} />
+    <directionalLight intensity={0.5} position={[2, 10, 0]} color={[1, 0.9, 0.95]}/>
+    
+    {/* GANTI ENVIRONMENT - PAKAI PRESET YANG RINGAN! */}
+    <Environment
+      preset="sunset"  // ← GANTI INI (jauh lebih ringan!)
+      backgroundRotation={[0, 3.3, 0]}
+      environmentRotation={[0, 3.3, 0]}
+      background
+      environmentIntensity={0.1 * environmentProgress}
+      backgroundIntensity={0.05 * environmentProgress}
+    />
+    
+    <EnvironmentBackgroundController intensity={0.05 * environmentProgress} />
+    <Fireworks isActive={fireworksActive} origin={[0, 10, 0]} />
+    <ConfiguredOrbitControls />
+  </Suspense>
+</Canvas>
     </div>
   );
 }
